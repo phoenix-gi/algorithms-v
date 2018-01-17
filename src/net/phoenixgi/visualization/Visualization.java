@@ -13,6 +13,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import net.phoenixgi.algorithms.sort.Insertion;
 import net.phoenixgi.algorithms.sort.Selection;
 
 /**
@@ -71,6 +72,27 @@ public class Visualization extends JFrame {
             }
         });
         JMenuItem insertionSortMenu = new JMenuItem("Insertion");
+        insertionSortMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                Random rnd = new Random();
+                Integer[] a = new Integer[arraySize];
+                for (int i = 0; i < a.length; i++) {
+                    a[i] = rnd.nextInt(90) + 10;
+                }
+                InsertionSortStepPainter issp = new InsertionSortStepPainter(currentFrame, a);
+                issp.stepStay();
+                panel.repaint();
+
+                Thread th = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Insertion.stepSort(a, issp, panel);
+                    }
+                });
+                th.start();
+            }
+        });
         sortMenu.add(selectionSortMenu);
         sortMenu.add(insertionSortMenu);
         m.add(sortMenu);
