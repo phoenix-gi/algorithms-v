@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import net.phoenixgi.algorithms.sort.Insertion;
 import net.phoenixgi.algorithms.sort.Selection;
+import net.phoenixgi.algorithms.sort.Shell;
 
 /**
  *
@@ -22,7 +23,7 @@ import net.phoenixgi.algorithms.sort.Selection;
  */
 public class Visualization extends JFrame {
 
-    final static int arraySize = 25;
+    final static int arraySize = 100;
     BufferedImage currentFrame = null;
     JPanel panel = null;
 
@@ -93,8 +94,31 @@ public class Visualization extends JFrame {
                 th.start();
             }
         });
+        JMenuItem shellSortMenu = new JMenuItem("Shell");
+        shellSortMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Random rnd = new Random();
+                Integer[] a = new Integer[arraySize];
+                for (int i = 0; i < a.length; i++) {
+                    a[i] = rnd.nextInt(90) + 10;
+                }
+                ShellSortStepPainter sssp = new ShellSortStepPainter(currentFrame, a);
+                sssp.stepStay();
+                panel.repaint();
+
+                Thread th = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Shell.stepSort(a, sssp, panel);
+                    }
+                });
+                th.start();
+            }
+        });
         sortMenu.add(selectionSortMenu);
         sortMenu.add(insertionSortMenu);
+        sortMenu.add(shellSortMenu);
         m.add(sortMenu);
         return m;
     }
