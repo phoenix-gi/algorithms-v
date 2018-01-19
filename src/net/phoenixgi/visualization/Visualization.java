@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import net.phoenixgi.algorithms.sort.Insertion;
+import net.phoenixgi.algorithms.sort.Merge;
 import net.phoenixgi.algorithms.sort.Selection;
 import net.phoenixgi.algorithms.sort.Shell;
 
@@ -116,9 +117,33 @@ public class Visualization extends JFrame {
                 th.start();
             }
         });
+        JMenuItem mergeSortMenu = new JMenuItem("Merge");
+        mergeSortMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Random rnd = new Random();
+                Integer[] a = new Integer[arraySize];
+                for (int i = 0; i < a.length; i++) {
+                    a[i] = rnd.nextInt(90) + 10;
+                }
+                MergeSortStepPainter mssp = new MergeSortStepPainter(currentFrame, a);
+                mssp.stepStay();
+                panel.repaint();
+
+                Thread th = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Merge.stepSort(a, mssp, panel);
+                    }
+                });
+                th.start();
+            }
+        });
+        
         sortMenu.add(selectionSortMenu);
         sortMenu.add(insertionSortMenu);
         sortMenu.add(shellSortMenu);
+        sortMenu.add(mergeSortMenu);
         m.add(sortMenu);
         return m;
     }
