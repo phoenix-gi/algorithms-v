@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import net.phoenixgi.algorithms.sort.Insertion;
 import net.phoenixgi.algorithms.sort.Merge;
 import net.phoenixgi.algorithms.sort.MergeBU;
+import net.phoenixgi.algorithms.sort.Quick;
 import net.phoenixgi.algorithms.sort.Selection;
 import net.phoenixgi.algorithms.sort.Shell;
 
@@ -162,11 +163,34 @@ public class Visualization extends JFrame {
                 th.start();
             }
         });
+        JMenuItem quickSortMenu = new JMenuItem("Quick");
+        quickSortMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Random rnd = new Random();
+                Integer[] a = new Integer[arraySize];
+                for (int i = 0; i < a.length; i++) {
+                    a[i] = rnd.nextInt(90) + 10;
+                }
+                QuickSortStepPainter qssp = new QuickSortStepPainter(currentFrame, a);
+                qssp.stepStay();
+                panel.repaint();
+
+                Thread th = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Quick.stepSort(a, qssp, panel);
+                    }
+                });
+                th.start();
+            }
+        });
         sortMenu.add(selectionSortMenu);
         sortMenu.add(insertionSortMenu);
         sortMenu.add(shellSortMenu);
         sortMenu.add(mergeSortMenu);
         sortMenu.add(mergeBUSortMenu);
+        sortMenu.add(quickSortMenu);
         m.add(sortMenu);
         return m;
     }
