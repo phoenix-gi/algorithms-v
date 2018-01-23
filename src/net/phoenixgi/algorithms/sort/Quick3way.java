@@ -1,6 +1,8 @@
 package net.phoenixgi.algorithms.sort;
 
 import java.util.Random;
+import javax.swing.JPanel;
+import net.phoenixgi.visualization.QuickSortStepPainter;
 
 /**
  *
@@ -34,6 +36,68 @@ public class Quick3way {
         }
         sort(a,lo,lt-1);
         sort(a,gt+1,hi);
+    }
+    
+    private static void stepSort(Comparable a[], int lo, int hi,QuickSortStepPainter qssp, JPanel panel) {
+        if (hi<=lo) return;
+        int lt = lo;
+        int i = lo+1;
+        int gt = hi;
+        Comparable v = a[lo];
+        while(i<=gt) {
+            int cmp = a[i].compareTo(v);
+            if(cmp < 0) {
+                qssp.stepExchange(i, lt);
+                panel.repaint();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    
+                }
+                Comparable b = a[lt];
+                a[lt] = a[i];
+                a[i] = b;
+                qssp.stepExchange(lt, i);
+                panel.repaint();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    
+                }
+                lt++;
+                i++;
+            } else if(cmp >0) {
+                qssp.stepExchange(i, gt);
+                panel.repaint();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    
+                }
+                Comparable b = a[gt];
+                a[gt] = a[i];
+                a[i]=b;
+                qssp.stepExchange(gt, i);
+                panel.repaint();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    
+                }
+                gt--;
+            } else {
+                i++;
+            }
+        }
+        stepSort(a,lo,lt-1,qssp,panel);
+        stepSort(a,gt+1,hi,qssp,panel);
+    }
+    
+    
+    public static void stepSort(Comparable a[],QuickSortStepPainter qssp, JPanel panel) {
+        stepSort(a,0,a.length-1,qssp,panel);
+        qssp.stepStay();
+        panel.repaint();
     }
     
     public static void sort(Comparable a[]) {
